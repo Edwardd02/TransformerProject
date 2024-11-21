@@ -10,5 +10,5 @@ tensorboard==1.15.0
 matplotlib==3.3.4
 numpy==1.19.2
 scikit_learn==0.23.2
-protobuf==3.17.3
+protobuf==3.18.3
 sktime==0.4.1
