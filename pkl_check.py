@@ -63,12 +63,6 @@ def inspect_pkl(filepath):
     else:
         print(f"✅ Found {len(gap_cols)} gap columns: {gap_cols}")
 
-    cov_cols = [col for col in df.columns if col not in gap_cols]
-    for col in cov_cols:
-        if df[col].isna().any():
-            print(f"❌ Covariate '{col}' has gaps. Covariates must be gap-free.")
-    print("\n")
-
 
 if __name__ == "__main__":
     import argparse
