@@ -9,7 +9,7 @@ This paper implements an existing transformer-based approach for predicting miss
 ## Requirements
 Python 3.12.
 
-## Installation and Imputation
+## Installation and Imputation 
 
 #### 1. Install the required packages:
 
@@ -83,6 +83,36 @@ In case you want to train a new model, here is an example:
 
 First, you need to have your data in a `.pkl` file. You may decide whether or not to create an artificial gap; if you do, you might want to use `make_gap.py`.
 
+### Input Format Requirements
+Your dataset must be structured as a **time-series pandas DataFrame** and saved as a `.pkl` (pickle) file:
+
+| Feature       | Requirement                                                                 |
+|---------------|-----------------------------------------------------------------------------|
+| **Index**     | Must be a `datetime` index (e.g., hourly/daily timestamps).                 |
+| **Columns**   | - Each column represents a variable (e.g., sensor data).<br>- One or more columns must contain gaps (`NaN`). |
+| **Covariates**| Gap-free columns (if used) must have **no missing values**.                 |
+
+### Step-by-Step Preparation
+
+#### A. Check Your Data File
+Use our validation tool to verify your `.pkl` file:
+```bash
+python pkl_check.py --file your_data.pkl
+```
+
+**Example Output Highlights**:
+```
+✅ Index is datetime        ← Good! Timestamps are recognized
+✅ Found 16 gap columns     ← These columns have missing data to fix
+```
+
+#### B. Fix Common Issues
+1. **No datetime index?** In your CSV:
+   ```python
+   df = pd.read_csv("data.csv", parse_dates=["Time"], index_col="Time")
+   ```
+2. **Wrong gaps format?** Ensure missing values are `NaN`, not 0 or blank.
+
 In this example, I created an artificial gap in the `OriginalSMPData` dataset, column_name = "P3_VWC", between indices 1440:4319. The data is saved to `data/SMPTestGap.pkl`.
 
 If you already have a gap in your data, you can skip this step.
@@ -153,7 +183,7 @@ mask = noise_mask(X, self.masking_ratio, self.mean_mask_length, self.mode, self.
 #### 3. Testing the model
 For the testing part, you must change `noise_mask` to `noise_mask_v2`.
 
-The testing part has already been explained.
+The testing part has already been explained, you should change the model path(`load_model`) to your trained model.
 
 ```html
 mask = noise_mask_v2(X, self.masking_ratio, self.mean_mask_length, self.mode, self.distribution,self.exclude_feats)  # (seq_length, feat_dim) boolean array
